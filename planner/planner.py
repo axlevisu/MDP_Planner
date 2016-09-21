@@ -9,7 +9,6 @@ def transpose(alist):
 	return map(list, zip(*alist))
 
 mdp_file_name = sys.argv[1]
-# mdp_file_name = '../data/MDP-2_5.txt'
 mdp_file = open(mdp_file_name, 'r')
 S = int(mdp_file.readline())
 A = int(mdp_file.readline())
@@ -18,18 +17,18 @@ T =[]
 for s in xrange(S):
 	R.append([])
 	for a in xrange(A):
-		R[s].append(map(float,mdp_file.readline().strip().split('\t')))
+		R[s].append(map(double,mdp_file.readline().strip().split('\t')))
 
 for s in xrange(S):
 	T.append([])
 	for a in xrange(A):
-		T[s].append(map(float,mdp_file.readline().strip().split('\t')))
+		T[s].append(map(double,mdp_file.readline().strip().split('\t')))
 
-g = float(mdp_file.readline())
+g = double(mdp_file.readline())
 V =[0]*S
 Q = [[]]*S
 pi =[-1]*S
-e = 0.000000001
+e = 0.00000001
 i = 0
 converge = False
 while not converge:
