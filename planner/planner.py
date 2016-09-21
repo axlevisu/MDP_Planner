@@ -4,6 +4,8 @@
 
 import sys
 from operator import add, mul
+from random import randint
+import numpy as np
 
 def transpose(alist):
 	return map(list, zip(*alist))
@@ -17,29 +19,39 @@ T =[]
 for s in xrange(S):
 	R.append([])
 	for a in xrange(A):
-		R[s].append(map(double,mdp_file.readline().strip().split('\t')))
+		R[s].append(map(float,mdp_file.readline().strip().split('\t')))
 
 for s in xrange(S):
 	T.append([])
 	for a in xrange(A):
-		T[s].append(map(double,mdp_file.readline().strip().split('\t')))
+		T[s].append(map(float,mdp_file.readline().strip().split('\t')))
 
-g = double(mdp_file.readline())
-V =[0]*S
-Q = [[]]*S
-pi =[-1]*S
-e = 0.00000001
-i = 0
+g = float(mdp_file.readline())
+pi = [randint(0,A-1) for a in xrange(S)]
 converge = False
+i =0
 while not converge:
-	i+=1
 	converge = True
-	for s in xrange(S):	
-		Vprev = V[s]
-		Q[s] = [sum(map(mul,map(add,[g*v for v in V],r),T[s][a])) for a,r in enumerate(R[s])]
-		V[s] = max(Q[s])
-		converge = converge and (abs(V[s]-Vprev)<e)
-	
+	b = [sum(map(mul,T[s][pi[s]],R[s][pi[s]]))  for s in xrange(S)]
+	a =[]
+	for s in xrange(S):
+		temp =[]
+		for sPrime in xrange(S):
+			if sPrime == s:
+				temp.append(1.0-g*T[s][pi[s]][sPrime])
+			else:
+				temp.append(-g*T[s][pi[s]][sPrime])
+		a.append(temp)
+	a = np.array(a)
+	b = np.array(b)
+	V = np.linalg.solve(a, b)
+	for s in xrange(S):
+		Q = [sum(map(mul,map(add,[g*v for v in V],r),T[s][a])) for a,r in enumerate(R[s])]
+		Qbest =max(Q)
+		a = [i for i,j in enumerate(Q) if j==Qbest][0]
+		if(Qbest>V[s]):
+			converge = converge and pi[s]==a
+			pi[s] =a
+			
 for s in xrange(S):
-	pi[s] = [i for i,j in enumerate(Q[s]) if j==V[s]][0]
 	print str(V[s])+'\t'+str(pi[s]) 
