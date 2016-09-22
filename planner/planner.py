@@ -7,9 +7,6 @@ from operator import add, mul
 from random import randint
 import numpy as np
 
-def transpose(alist):
-	return map(list, zip(*alist))
-
 mdp_file_name = sys.argv[1]
 mdp_file = open(mdp_file_name, 'r')
 S = int(mdp_file.readline())
@@ -48,6 +45,7 @@ while not converge:
 	for s in xrange(S):
 		Q = [sum(map(mul,map(add,[g*v for v in V],r),T[s][a])) for a,r in enumerate(R[s])]
 		Qbest =max(Q)
+		# Find optimal action
 		a = [i for i,j in enumerate(Q) if j==Qbest][0]
 		if(Qbest>V[s]):
 			converge = converge and pi[s]==a

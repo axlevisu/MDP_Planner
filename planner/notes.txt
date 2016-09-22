@@ -1,0 +1,6 @@
+Muppirala Viswa Virinchi
+130070038
+
+1)Implemented Policy Iteration
+2)Used np.linalg.solve(A,b) to solve linear equation Ax=b
+3)
